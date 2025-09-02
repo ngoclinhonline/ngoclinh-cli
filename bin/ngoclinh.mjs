@@ -49,11 +49,17 @@ const program = new Command();
     .description("Chạy command từ build-email framework (build, serve, make:*)")
     .action(async (args) => {
       try {
-        // Lấy version của build-email từ package.json
-        const { version: beVersion } = await importFrom(
-          process.cwd(),
-          "build-email/package.json"
-        );
+        let beVersion = "unknown";
+
+        // Lấy version của build-email từ chính node_modules (nếu có)
+        try {
+          const bePkg = await importFrom(process.cwd(), "build-email/package.json", {
+            assert: { type: "json" }
+          });
+          beVersion = bePkg.version;
+        } catch {
+          // fallback nếu không đọc được
+        }
 
         // Nếu chỉ gọi `ngoclinh build-email --version`
         if (args.includes("--version") || args.includes("-v")) {
@@ -62,12 +68,9 @@ const program = new Command();
         }
 
         // Import CLI entry của build-email
-        const bootstrap = await importFrom(
-          process.cwd(),
-          "build-email/src/index.js"
-        );
+        const bootstrap = await importFrom(process.cwd(), "build-email/src/index.js");
 
-        if (bootstrap.default) {
+        if (bootstrap?.default) {
           // Forward args sang build-email
           process.argv = ["node", "build-email", ...args];
           await bootstrap.default();

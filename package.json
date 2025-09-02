@@ -1,6 +1,6 @@
 {
   "name": "ngoclinh-cli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "NgocLinh CLI - Công cụ quản lý và mở rộng các package tiện ích trong hệ sinh thái NgocLinh",
   "license": "MIT",
   "type": "module",
