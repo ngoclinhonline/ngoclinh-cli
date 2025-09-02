@@ -1,63 +1,76 @@
-# NgocLinh CLI
-
-`ngoclinh-cli` là công cụ dòng lệnh (CLI) cá nhân của **NgocLinh**  
-dùng để quản lý và phát triển các package trong hệ sinh thái như:
-
-- `build-email-template` → Công cụ build email với Tailwind CSS + Maizzle.  
-- (Sẽ cập nhật thêm…)
-
----
-
-## 🚀 Cài đặt
-
-```bash
-npm install -g ngoclinh-cli
-
-
----
-
-📖 Cách sử dụng
-
-Hiển thị trợ giúp:
-
-ngoclinh --help
-
-Xem phiên bản:
-
-ngoclinh --version
-
-Xem thông tin CLI:
-
-ngoclinh --info
-
-Danh sách các package trong hệ sinh thái:
-
-ngoclinh packages
-
-
----
-
-📝 Yêu cầu hệ thống
-
-Node.js >= 18
-
-npm >= 9
-
-
-
----
-
-📄 License
-
-MIT
-
-
----
-
-👤 Tác giả
-
-NgocLinh Online
-🌐 Website: https://ngoclinh.online
-📧 Email: admin@ngoclinh.online
-
----
+# Sau khi reset kernel, tạo lại file README.txt
+
+readme_content = """# NgocLinh CLI
+
+NgocLinh CLI là công cụ dòng lệnh (Command-Line Interface) hỗ trợ phát triển, mở rộng cho nhiều package khác nhau như build email template, tự động hoá, và các tiện ích trong tương lai.
+
+## Cài đặt
+
+Cài đặt toàn cục từ npm:
+
+```bash
+npm install -g ngoclinh-cli
+```
+
+## Sử dụng
+
+Chạy lệnh:
+
+```bash
+ngoclinh --help
+```
+
+### Các lệnh hiện tại
+
+- **Phiên bản**
+  ```bash
+  ngoclinh -v
+  ngoclinh --version
+  ```
+
+- **Thông tin CLI**
+  ```bash
+  ngoclinh info
+  ```
+
+- **Danh sách package hỗ trợ**
+  ```bash
+  ngoclinh list
+  ```
+
+## Ví dụ
+
+```bash
+ngoclinh info
+```
+
+Kết quả:
+
+```
+NgocLinh CLI v1.0.0
+Website : https://ngoclinh.online
+Email   : admin@ngoclinh.online
+```
+
+## Đóng góp
+
+Mọi đóng góp đều được hoan nghênh.  
+Fork repo này và gửi pull request.
+
+## Giấy phép
+
+[MIT License](./LICENSE)
+
+---
+
+📌 Tác giả: **NgocLinh Online**  
+🌍 Website: [https://ngoclinh.online](https://ngoclinh.online)  
+📧 Email: admin@ngoclinh.online
+"""
+
+# Lưu vào file txt
+file_path = "/mnt/data/README.txt"
+with open(file_path, "w", encoding="utf-8") as f:
+    f.write(readme_content)
+
+file_path
