@@ -20,7 +20,7 @@ const program = new Command();
   program
     .name("ngoclinh")
     .description("NgocLinh CLI - Công cụ gọi framework trong hệ sinh thái NgocLinh")
-    .version(pkg.version, "-v, --version", "Hiển thị phiên bản CLI");
+    .version(pkg.version, "-v, --version", "Hiển thị phiên bản NgocLinh CLI");
 
   // Lệnh info
   program
@@ -28,9 +28,9 @@ const program = new Command();
     .description("Thông tin về CLI và tác giả")
     .action(() => {
       console.log("NgocLinh CLI");
-      console.log("Phiên bản:", pkg.version);
-      console.log("Website  :", "https://ngoclinh.online");
-      console.log("Email    :", "admin@ngoclinh.online");
+      console.log("Phiên bản CLI:", pkg.version);
+      console.log("Website      :", "https://ngoclinh.online");
+      console.log("Email        :", "admin@ngoclinh.online");
     });
 
   // Lệnh list
@@ -38,7 +38,7 @@ const program = new Command();
     .command("list")
     .description("Danh sách package framework được hỗ trợ")
     .action(() => {
-      console.log("Danh sách framework NgocLinh hỗ trợ:");
+      console.log("Framework NgocLinh hỗ trợ:");
       console.log("- build-email (kế thừa Maizzle framework + CLI)");
     });
 
@@ -46,14 +46,29 @@ const program = new Command();
   program
     .command("build-email [args...]")
     .allowUnknownOption()
-    .description("Chạy command từ build-email framework")
+    .description("Chạy command từ build-email framework (build, serve, make:*)")
     .action(async (args) => {
       try {
-        // Import CLI chính của build-email (nó chính là src/index.js bạn copy từ maizzle/cli)
-        const bootstrap = await importFrom(process.cwd(), "build-email/src/index.js");
+        // Lấy version của build-email từ package.json
+        const { version: beVersion } = await importFrom(
+          process.cwd(),
+          "build-email/package.json"
+        );
+
+        // Nếu chỉ gọi `ngoclinh build-email --version`
+        if (args.includes("--version") || args.includes("-v")) {
+          console.log(`Build-email framework v${beVersion}`);
+          return;
+        }
+
+        // Import CLI entry của build-email
+        const bootstrap = await importFrom(
+          process.cwd(),
+          "build-email/src/index.js"
+        );
 
         if (bootstrap.default) {
-          // Gọi CLI của build-email, forward toàn bộ args
+          // Forward args sang build-email
           process.argv = ["node", "build-email", ...args];
           await bootstrap.default();
         } else {
