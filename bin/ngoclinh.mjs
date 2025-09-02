@@ -3,6 +3,7 @@ import { Command } from "commander";
 import { readFile } from "fs/promises";
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
+import importFrom from "import-from-esm";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -18,7 +19,7 @@ const program = new Command();
 
   program
     .name("ngoclinh")
-    .description("NgocLinh CLI - Công cụ hỗ trợ phát triển")
+    .description("NgocLinh CLI - Công cụ gọi framework trong hệ sinh thái NgocLinh")
     .version(pkg.version, "-v, --version", "Hiển thị phiên bản CLI");
 
   // Lệnh info
@@ -35,28 +36,34 @@ const program = new Command();
   // Lệnh list
   program
     .command("list")
-    .description("Danh sách package được hỗ trợ")
+    .description("Danh sách package framework được hỗ trợ")
     .action(() => {
-      console.log("Danh sách package NgocLinh hỗ trợ:");
-      console.log("- build-email-template");
-      console.log("- (sẽ bổ sung thêm sau)");
+      console.log("Danh sách framework NgocLinh hỗ trợ:");
+      console.log("- build-email (kế thừa Maizzle framework + CLI)");
     });
 
-  // Giữ help mặc định
+  // Forward toàn bộ lệnh sang build-email
+  program
+    .command("build-email [args...]")
+    .allowUnknownOption()
+    .description("Chạy command từ build-email framework")
+    .action(async (args) => {
+      try {
+        // Import CLI chính của build-email (nó chính là src/index.js bạn copy từ maizzle/cli)
+        const bootstrap = await importFrom(process.cwd(), "build-email/src/index.js");
+
+        if (bootstrap.default) {
+          // Gọi CLI của build-email, forward toàn bộ args
+          process.argv = ["node", "build-email", ...args];
+          await bootstrap.default();
+        } else {
+          console.error("Không tìm thấy entry CLI trong build-email.");
+        }
+      } catch (err) {
+        console.error("Lỗi khi chạy build-email:", err.message);
+      }
+    });
+
   program.helpOption("-h, --help", "Hiển thị hướng dẫn sử dụng");
-
-  // Không cho Commander crash khi option sai
-  program.exitOverride();
-
-  try {
-    program.parse(process.argv);
-  } catch (err) {
-    if (err.code === "commander.unknownOption") {
-      console.log("Tùy chọn không hợp lệ:", err.optionName);
-      console.log("Dùng: ngoclinh --help để xem hướng dẫn.");
-    } else {
-      console.log("Có lỗi xảy ra:", err.message);
-    }
-    process.exit(1);
-  }
+  program.parse(process.argv);
 })();

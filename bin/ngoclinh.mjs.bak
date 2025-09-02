@@ -1,0 +1,88 @@
+#!/usr/bin/env node
+import { Command } from "commander";
+import { readFile } from "fs/promises";
+import { fileURLToPath } from "url";
+import { dirname, resolve } from "path";
+import importFrom from "import-from-esm"; // để import dynamic từ node_modules
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+async function getPkg() {
+  const pkgData = await readFile(resolve(__dirname, "../package.json"), "utf-8");
+  return JSON.parse(pkgData);
+}
+
+const program = new Command();
+
+(async () => {
+  const pkg = await getPkg();
+
+  program
+    .name("ngoclinh")
+    .description("NgocLinh CLI - Công cụ hỗ trợ phát triển")
+    .version(pkg.version, "-v, --version", "Hiển thị phiên bản CLI");
+
+  // Lệnh info
+  program
+    .command("info")
+    .description("Thông tin về CLI và tác giả")
+    .action(() => {
+      console.log("NgocLinh CLI");
+      console.log("Phiên bản:", pkg.version);
+      console.log("Website  :", "https://ngoclinh.online");
+      console.log("Email    :", "admin@ngoclinh.online");
+    });
+
+  // Lệnh list
+  program
+    .command("list")
+    .description("Danh sách package được hỗ trợ")
+    .action(() => {
+      console.log("Danh sách package NgocLinh hỗ trợ:");
+      console.log("- build-email");
+      console.log("- (sẽ bổ sung thêm sau)");
+    });
+
+  // Lệnh build-email
+  program
+    .command("build-email <action>")
+    .description("Chạy build-email framework (build hoặc serve)")
+    .option("-c, --config [config]", "Đường dẫn tới file config build-email")
+    .option("-p, --port [port]", "Cổng chạy server khi dùng serve")
+    .action(async (action, options) => {
+      try {
+        // lấy framework build-email đã publish vào node_modules
+        const { build, serve } = await importFrom(process.cwd(), "build-email");
+
+        if (action === "build") {
+          options.config ? await build(options.config) : await build({});
+        } else if (action === "serve") {
+          options.config
+            ? await serve(options.config)
+            : await serve({ server: { port: options.port || 3000 } });
+        } else {
+          console.error("Hành động không hợp lệ. Dùng: build hoặc serve.");
+        }
+      } catch (err) {
+        console.error("Lỗi khi chạy build-email:", err.message);
+      }
+    });
+
+  // Giữ help mặc định
+  program.helpOption("-h, --help", "Hiển thị hướng dẫn sử dụng");
+
+  // Không cho Commander crash khi option sai
+  program.exitOverride();
+
+  try {
+    program.parse(process.argv);
+  } catch (err) {
+    if (err.code === "commander.unknownOption") {
+      console.log("Tùy chọn không hợp lệ:", err.optionName);
+      console.log("Dùng: ngoclinh --help để xem hướng dẫn.");
+    } else {
+      console.log("Có lỗi xảy ra:", err.message);
+    }
+    process.exit(1);
+  }
+})();
