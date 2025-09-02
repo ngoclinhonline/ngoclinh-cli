@@ -1,7 +1,7 @@
 {
   "name": "ngoclinh-cli",
-  "version": "1.0.0",
-  "description": "CLI tool by NgocLinh - quản lý và mở rộng các package tiện ích",
+  "version": "1.0.1",
+  "description": "NgocLinh CLI - Công cụ quản lý và mở rộng các package tiện ích trong hệ sinh thái NgocLinh",
   "license": "MIT",
   "type": "module",
   "bin": {
@@ -9,11 +9,13 @@
   },
   "files": [
     "bin",
-    "src"
+    "src",
+    "README.md",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ngoclinhonline/ngoclinh-cli.git"
+    "url": "git+https://github.com/ngoclinhonline/ngoclinh-cli.git"
   },
   "bugs": {
     "url": "https://github.com/ngoclinhonline/ngoclinh-cli/issues"
@@ -30,13 +32,21 @@
     "tools",
     "utilities",
     "email-template",
-    "laravel"
+    "laravel",
+    "framework"
   ],
   "scripts": {
     "test": "echo \"No tests yet\" && exit 0"
   },
   "dependencies": {
     "commander": "^12.1.0",
-    "picocolors": "^1.0.1"
+    "picocolors": "^1.0.1",
+    "import-from-esm": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
