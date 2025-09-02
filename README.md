@@ -1,4 +1,5 @@
-NgocLinh CLI là công cụ dòng lệnh (Command-Line Interface) hỗ trợ phát triển, mở rộng cho nhiều package khác nhau như build email template, tự động hoá, và các tiện ích trong tương lai.
+## NgocLinh CLI 1.0.0
+NgocLinh CLI là công cụ dòng lệnh (Command-Line Interface) hỗ trợ phát triển, mở rộng cho nhiều package khác nhau như build email template, tự động hoá, và các tiện ích trong tương lai.
 
 
 
@@ -125,5 +126,6 @@ Fork repo này và gửi pull request.
 🌍 Website: [https://ngoclinh.online](https://ngoclinh.online)  
 
 📧 Email: admin@ngoclinh.online
+
 
 """
